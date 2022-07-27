@@ -1,0 +1,166 @@
+﻿<Window x:Class="PngTuber.Pupper.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PngTuber.Pupper"
+        xmlns:wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        mc:Ignorable="d"
+        Title="PNG Puppeteer" Height="450" Width="1024" Icon="icon.ico">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="1"
+              Margin="5,0,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <GroupBox Header="Microphones">
+                <ListBox ItemsSource="{Binding Devices}"
+                 SelectedItem="{Binding SelectedDevice, Mode=TwoWay}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding FriendlyName}"
+                                   FontWeight="Bold"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </GroupBox>
+
+            <GroupBox Header="Volume Level"
+                      Grid.Row="1">
+                <ProgressBar Grid.Row="1"
+                         Minimum="0"
+                         Maximum="100"
+                         Height="40"
+                         Value="{Binding VolumeLevel}" />
+            </GroupBox>
+            <GroupBox Header="Mouth Open Threshold"
+                      Grid.Row="2">
+                <Slider Grid.Row="2"
+                    Minimum="0"
+                    Maximum="100"
+                    Value="{Binding TriggerThreshold, Mode=TwoWay}" />
+            </GroupBox>
+            <Grid Grid.Row="3"
+                  VerticalAlignment="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Button Command="{Binding StartMonitor}"
+                        Margin="4">
+                    Start
+                </Button>
+                <Button Command="{Binding StopMonitor}" 
+                        Grid.Column="1"
+                        Margin="4">
+                    Stop
+                </Button>
+            </Grid>
+
+            <GroupBox Header="Settings for Avatar"
+                      Grid.Row="4">
+                <DockPanel>
+                    <CheckBox IsChecked="{Binding AllowBlink, Mode=TwoWay}"
+                              DockPanel.Dock="Top">
+                        Enable Blink Frames
+                    </CheckBox>
+
+                    <CheckBox IsChecked="{Binding ListenGlobalHotkeys, Mode=TwoWay}"
+                              DockPanel.Dock="Top"
+                              VerticalAlignment="Top">
+                        Listen for Global Expression Hotkeys
+                    </CheckBox>
+                    <TextBlock>
+                        Ctrl + Shift + F1 - F10 switches 1-10 expressions
+                    </TextBlock>
+
+                    <!--<GroupBox DockPanel.Dock="Top"
+                              VerticalAlignment="Top"
+                              Header="Transform on Talk">
+                        <Slider Minimum="0"
+                                Maximum="10"
+                                Value="{Binding ChildNudgeFactor, Mode=TwoWay}"/>
+                    </GroupBox>-->
+
+                </DockPanel>
+            </GroupBox>
+        </Grid>
+
+        <GridSplitter Grid.Column="1"
+                      Width="5"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Stretch" />
+        <Grid Grid.Column="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <ComboBox ItemsSource="{Binding Expressions}"
+                          SelectedItem="{Binding SelectedExpression, Mode=TwoWay}"
+                          DisplayMemberPath="Name"/>
+                <Grid Grid.Column="1">
+                    <Button Command="{Binding LoadExpressionSet}"
+                            Grid.Column="1">
+                        Load Avatar
+                    </Button>
+                </Grid>
+                <GroupBox Header="Mouth Open, Eyes Open"
+                          Grid.Row="1">
+                    <Image Source="{Binding SelectedExpression.EyesOpenMouthOpen}"/>
+                </GroupBox>
+                <GroupBox Header="Mouth Open, Eyes Close"
+                          Grid.Row="1"
+                          Grid.Column="1">
+                    <Image Source="{Binding SelectedExpression.EyesCloseMouthOpen}"/>
+                </GroupBox>
+                <GroupBox Header="Mouth Close, Eyes Open"
+                          Grid.Row="2">
+                    <Image Source="{Binding SelectedExpression.EyesOpenMouthClose}"/>
+                </GroupBox>
+                <GroupBox Header="Mouth Close, Eyes Close"
+                          Grid.Row="2"
+                          Grid.Column="2">
+                    <Image Source="{Binding SelectedExpression.EyesCloseMouthClose}"/>
+                </GroupBox>
+
+
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <GroupBox Header="Preview">
+                <wpf:WebView2 x:Name="previewWindow" />
+            </GroupBox>
+
+            <TextBox Grid.Row="1"
+                     Margin="4"
+                     Padding="2"
+                     IsReadOnly="True"
+                     Text="http://localhost:65000/viewer" />
+        </Grid>
+    </Grid>
+</Window>
